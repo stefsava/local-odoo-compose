@@ -1,0 +1,1 @@
+tar cvfz ../odoo_sandbox_`date +"%Y-%m-%dT%H_%M_%S"`.tgz .

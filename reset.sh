@@ -1,8 +1,10 @@
 docker stop odoo_sandbox_odoo_1 odoo_sandbox_postgres_1
 docker rm odoo_sandbox_odoo_1 odoo_sandbox_postgres_1
-rm -r volumes 
+rm -rf ./volumes/{postgres,odoo/filestore,odoo/sessions} 
 
-mkdir -p ./volumes/{postgres,odoo/filestore,odoo/sessions,odoo/ssh}
+mkdir -p ./volumes/{postgres,odoo/addons,odoo/filestore,odoo/sessions,odoo/ssh}
+cp init/oca_dependencies.txt volumes/odoo/addons
+
 docker-compose up -d postgres
 
 echo "Wait 10 secs for postgres service"
@@ -19,3 +21,6 @@ echo "
 " | docker-compose exec -T postgres psql -U postgres
 
 docker-compose up -d odoo
+open http://localhost:8069
+docker-compose logs -f
+

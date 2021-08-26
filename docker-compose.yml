@@ -3,6 +3,8 @@ services:
 
   postgres:
     image: postgres:9.5
+    ports:
+      - 127.0.0.1:15432:5432
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       # - /etc/passwd:/etc/passwd:ro
@@ -12,7 +14,8 @@ services:
     # user: 1001:1001
 
   odoo:
-    image: elicocorp/odoo:14.0
+    # image: elicocorp/odoo:14.0
+    build: ./build/odoo
     command: start
     ports:
       - 127.0.0.1:8069:8069
@@ -22,6 +25,7 @@ services:
       - ./volumes/odoo/addons:/opt/odoo/additional_addons
       - ./volumes/odoo/filestore:/opt/odoo/data/filestore
       - ./volumes/odoo/sessions:/opt/odoo/data/sessions
+      - ~/.ssh:/opt/odoo/ssh:ro
     environment:
       # - TARGET_UID=1001
       - ODOO_ADMIN_PASSWD=strong_odoo_master_password
