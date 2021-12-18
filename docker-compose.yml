@@ -2,7 +2,7 @@ version: '3.3'
 services:
 
   postgres:
-    image: postgres:9.5
+    image: postgres:14.1
     ports:
       - 127.0.0.1:15432:5432
     volumes:
@@ -12,11 +12,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=strong_pg_superuser_password
     # user: 1001:1001
+    user: postgres
 
   odoo:
-    # image: elicocorp/odoo:14.0
+    # image: elicocorp/odoo:15.0
     build: ./build/odoo
-    command: start
+    command: start # -d s3prova --no-database-list
     ports:
       - 127.0.0.1:8069:8069
     links:
@@ -31,3 +32,6 @@ services:
       - ODOO_ADMIN_PASSWD=strong_odoo_master_password
       - ODOO_DB_USER=odoo
       - ODOO_DB_PASSWORD=strong_pg_superuser_password
+      # - ODOO_DATABASE=s3prova
+      # - ODOO_NO_DATABASE_LIST
+

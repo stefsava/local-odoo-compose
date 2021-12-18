@@ -1,4 +1,5 @@
-FROM elicocorp/odoo:14.0
+FROM elicocorp/odoo:15.0
+# FROM stefsava/odoo:15.0
 LABEL org.opencontainers.image.authors="stefano@savanelli.it"
 
 # RUN pip install --upgrade cffi
