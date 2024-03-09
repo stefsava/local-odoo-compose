@@ -1,5 +1,4 @@
-docker stop odoo_sandbox_odoo_1 odoo_sandbox_postgres_1
-docker rm odoo_sandbox_odoo_1 odoo_sandbox_postgres_1
+docker-compose rm -fs
 rm -rf ./volumes/{postgres,odoo/filestore,odoo/sessions} 
 
 mkdir -p ./volumes/{postgres,odoo/addons,odoo/filestore,odoo/sessions,odoo/ssh}
