@@ -20,4 +20,4 @@ BEGIN
 END
 \$do\$;
 " | \
-PGPASSWORD=$ODOO_DB_PASSWORD psql -h postgres -U postgres
+PGPASSWORD=$ODOO_DB_PASSWORD psql -h db -U postgres

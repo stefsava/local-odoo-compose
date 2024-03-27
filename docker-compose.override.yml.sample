@@ -1,0 +1,5 @@
+version: '3.3'
+
+services:
+  db:
+    user: 1001:1003
