@@ -2,17 +2,21 @@ version: '3.3'
 services:
 
   postgres:
-    image: postgres:16
-    ports:
-      - 127.0.0.1:15432:5432
+    image: postgres:16-alpine
+    # ports:
+    #   - 127.0.0.1:15432:5432
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
       # - /etc/passwd:/etc/passwd:ro
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=strong_pg_superuser_password
+      - POSTGRES_PASSWORD=${ODOO_DB_PASSWORD}
     # user: 1001:1001
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   odoo:
     # image: elicocorp/odoo:14.0
     build: ./build/odoo
@@ -25,9 +29,13 @@ services:
       - ./volumes/odoo/addons:/opt/odoo/additional_addons
       - ./volumes/odoo/filestore:/opt/odoo/data/filestore
       - ./volumes/odoo/sessions:/opt/odoo/data/sessions
+      - ./volumes/odoo/scripts:/opt/scripts
       - ~/.ssh:/opt/odoo/ssh:ro
     environment:
       # - TARGET_UID=1001
-      - ODOO_ADMIN_PASSWD=strong_odoo_master_password
-      - ODOO_DB_USER=odoo
-      - ODOO_DB_PASSWORD=strong_pg_superuser_password
+      - ODOO_ADMIN_PASSWD=${ODOO_ADMIN_PASSWD}
+      - ODOO_DB_USER=${ODOO_DB_USER}
+      - ODOO_DB_PASSWORD=${ODOO_DB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy

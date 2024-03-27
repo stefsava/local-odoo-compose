@@ -1,25 +1,17 @@
 docker-compose rm -fs
-rm -rf ./volumes/{postgres,odoo/filestore,odoo/sessions} 
 
-mkdir -p ./volumes/{postgres,odoo/addons,odoo/filestore,odoo/sessions,odoo/ssh}
+until test -z $(docker-compose ps -q)
+do
+  echo waiting for docker compose stop and remove containers ...
+  sleep 1
+done
+
+rm -rf ./volumes/{postgres,odoo/filestore,odoo/sessions}
+
+mkdir -p ./volumes/{postgres,odoo/addons,odoo/filestore,odoo/sessions,odoo/ssh,odoo/scripts}
 cp init/oca_dependencies.txt volumes/odoo/addons
+cp init/startup.sh volumes/odoo/scripts/
 
-docker-compose up -d postgres
-
-echo "Wait 10 secs for postgres service"
-sleep 10
-docker-compose logs
-
-echo "Wait 10 secs for postgres service"
-sleep 10
-docker-compose logs
-
-echo "
-  CREATE user odoo WITH password 'strong_pg_superuser_password';
-  ALTER user odoo WITH createdb;
-" | docker-compose exec -T postgres psql -U postgres
-
-docker-compose up -d odoo
+docker-compose up -d
 open http://localhost:8069
 docker-compose logs -f
-
