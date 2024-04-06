@@ -10,7 +10,7 @@ services:
       # - /etc/passwd:/etc/passwd:ro
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${ODOO_DB_PASSWORD}
+      - POSTGRES_PASSWORD=${ODOO_DB_PASSWORD:?Please configure in .env}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -20,7 +20,7 @@ services:
     build: ./build/odoo
     command: start
     ports:
-      - 127.0.0.1:8069:8069
+      - 127.0.0.1:${ODOO_PORT:-8069}:8069
     volumes:
       - ./volumes/odoo/addons:/opt/odoo/additional_addons
       - ./volumes/odoo/filestore:/opt/odoo/data/filestore
@@ -28,9 +28,9 @@ services:
       - ./volumes/odoo/scripts:/opt/scripts
       - ~/.ssh:/opt/odoo/ssh:ro
     environment:
-      - ODOO_ADMIN_PASSWD=${ODOO_ADMIN_PASSWD}
-      - ODOO_DB_USER=${ODOO_DB_USER}
-      - ODOO_DB_PASSWORD=${ODOO_DB_PASSWORD}
+      - ODOO_ADMIN_PASSWD=${ODOO_ADMIN_PASSWD:?Please configure in .env}
+      - ODOO_DB_USER=${ODOO_DB_USER:?Please configure in .env}
+      - ODOO_DB_PASSWORD=${ODOO_DB_PASSWORD:?Please configure in .env}
     depends_on:
       db:
         condition: service_healthy
