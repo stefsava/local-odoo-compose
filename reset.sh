@@ -1,3 +1,7 @@
+set -o allexport
+source .env set
+set +o allexport
+
 docker-compose rm -fs
 
 until test -z $(docker-compose ps -q)
@@ -13,5 +17,5 @@ cp init/oca_dependencies.txt volumes/odoo/addons
 cp init/startup.sh volumes/odoo/scripts/
 
 docker-compose up -d
-open http://localhost:8069
+open http://localhost:$ODOO_PORT
 docker-compose logs -f
